@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-md-12">
+		{% with messages = get_flashed_messages() %}
+		{% for message in messages %}
+		<div class="alert alert-success alert-dismissible" role="alert">
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			{{ message }}
+		</div>
+		{% endfor %}
+		{% endwith %}
+	</div>
+	<div class="col-md-4">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h3 class="panel-title"><strong>Car Categories</strong></h3></div>
+			<div class="list-group">
+				{% for category in categories %}
+				<a href="/catalog/{{category.id}}/items" class="list-group-item">{{category.name}}</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<div class="panel panel-danger">
+			<div class="panel-heading"><h3 class="panel-title"><strong>Lastest Items</strong></h3></div>
+			<div class="list-group">
+				{% for categoryItem in categoryItems %}
+				<a href="/catalog/{{categoryItem.category_id}}/item/{{categoryItem.id}}" class="list-group-item">
+					{{categoryItem.title}} <em>({{categoryItem.category.name}})</em>
+				</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}

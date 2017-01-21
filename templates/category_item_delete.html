@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="panel panel-primary">
+			<div class="panel-heading"><h3 class="panel-title"><strong>Car Categories</strong></h3></div>
+			<div class="list-group">
+				{% for category in categories %}
+				<a href="/catalog/{{category.id}}/items" class="list-group-item">{{category.name}}</a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<form action="/catalog/{{category_id}}/item/{{category_item_id}}/delete" method="post">
+
+		<h2>Are sure want to delete?<h2>
+		<input type="submit" class="btn btn-primary" value="Submit" />
+		<a href="javascript:history.back()" class="btn btn-danger" role="button">Cancel</a>
+
+		</form>
+	</div>
+</div>
+
+{% endblock %}
