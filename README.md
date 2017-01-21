@@ -4,9 +4,9 @@
 ## Instructions on how to run the project
 1. Before run your project you must need a google OAuth client ID.
 At [Google Cloud Console](https://console.cloud.google.com/apis)
-* Make a new project that name is "Catalog App"
-* Save client ID information to "client_secrets.json".
-* Change your client ID at *span.g-signin*s attribute *data-clientid*s value from *login.html* 
+  * Make a new project that name is "Catalog App"
+  * Save client ID information to "client_secrets.json".
+  * Change your client ID at *span.g-signin*s attribute *data-clientid*s value from *login.html* 
 
 2. Install "Vagrant" and run "fullstack-nanodegree-vm"
 
@@ -18,6 +18,3 @@ At [Google Cloud Console](https://console.cloud.google.com/apis)
 
 5. Run python code for weg server
 > python project.py
-
- * Running on http://0.0.0.0:5000/
- * Restarting with reloader
