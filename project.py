@@ -9,6 +9,8 @@ from database_setup import Base, Category, CategoryItem, User
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 
+from functools import wraps
+
 import json
 import random
 import string
@@ -26,6 +28,16 @@ session = DBSession()
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog App"
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in login_session:
+            return redirect('/login')
+        else:
+            return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route('/catalog/json')
@@ -87,11 +99,9 @@ def categoryItemsHtml(category_id):
 
 
 @app.route('/catalog/<int:category_id>/new_item', methods=['GET', 'POST'])
+@login_required
 def newCategoryItemHtml(category_id):
     """New item page(get), add(post) for specific category"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     if request.method == 'POST':
         newCategoryItem = CategoryItem(
             title=request.form['title'],
@@ -131,11 +141,9 @@ def categoryItemHtml(category_id, category_item_id):
 
 @app.route('/catalog/<int:category_id>/item/<int:category_item_id>/edit',
            methods=['GET', 'POST'])
+@login_required
 def editCategoryItemHtml(category_id, category_item_id):
     """Edit item page(get), edit(post)"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     categoryItem = session.query(CategoryItem).filter_by(
         id=category_item_id).one()
 
@@ -169,11 +177,9 @@ def editCategoryItemHtml(category_id, category_item_id):
 
 @app.route('/catalog/<int:category_id>/item/<int:category_item_id>/delete',
            methods=['GET', 'POST'])
+@login_required
 def deleteCategoryItemHtml(category_id, category_item_id):
     """Delete item page(get), delete(post)"""
-    if 'username' not in login_session:
-        return redirect('/login')
-
     categoryItem = session.query(CategoryItem).filter_by(
         id=category_item_id).one()
 
@@ -373,5 +379,4 @@ def getUserID(email):
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
-    app.debug = True
     app.run(host='0.0.0.0', port=5000)
