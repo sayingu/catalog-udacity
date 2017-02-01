@@ -3,7 +3,7 @@ from flask import request, render_template, redirect, url_for, make_response
 from flask import jsonify, flash
 from flask import session as login_session
 from sqlalchemy import create_engine, asc, desc
-from sqlalchemy.orm import sessionmaker, joinedload
+from sqlalchemy.orm import sessionmaker, joinedload, scoped_session
 from database_setup import Base, Category, CategoryItem, User
 
 from oauth2client.client import flow_from_clientsecrets
@@ -19,14 +19,15 @@ import requests
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('sqlite:////var/www/udacity-catalog/catalog.db',
+                       connect_args={'check_same_thread': False}')
 Base.metadata.bind = engine
 
-DBSession = sessionmaker(bind=engine)
+DBSession = scoped_session(sessionmaker(bind=engine))
 session = DBSession()
 
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+CLIENT_ID = json.loads(open('/var/www/udacity-catalog/client_secrets.json',
+                            'r').read())['web']['client_id']
 APPLICATION_NAME = "Catalog App"
 
 
@@ -378,5 +379,6 @@ def getUserID(email):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
-    app.run(host='0.0.0.0', port=5000)
+    #commented because use mod_wsgi for project 5
+    #app.secret_key = 'super_secret_key'
+    app.run(host='0.0.0.0', port=80)
